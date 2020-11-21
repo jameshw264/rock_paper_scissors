@@ -1,3 +1,52 @@
+<body>
+    <div class="container">
+        <button id="rock">Rock</button>
+        <button id="paper">Paper</button>
+        <button id="scissors">Scissors</button>
+        <div id="answer-box"></div>
+    </div>
+</body>
+<style>
+    html, body{
+        font-family: Arial, Helvetica, sans-serif;
+        display: block;
+    }
+    .container {
+        display: block;
+        margin: auto;
+        text-align: center;
+        margin-top: 200px;
+    }
+
+    button {
+        transition-duration: 0.4s;
+        border: 1px solid #e8e8e8;
+        border-radius: 5px;
+        color: #222;
+        height: 40px;
+        width: 100px;
+        font-size: 20px;
+        outline: none;
+
+    }
+    button:hover{
+        transition-duration: 0.4s;
+        background-color: #d4d4d4;
+        cursor: pointer;
+    }
+    #answer-box {
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        border: 1px solid #cfcfcf;
+        height: 80px;
+        width: 500px;
+        margin: auto;
+        margin-top: 50px;
+        color: #474747;
+        line-height: 70px;
+
+    }
+</style>
 <script>
     function computerPlay(){
         const choice = Math.floor(Math.random() * 3); 
@@ -13,39 +62,42 @@
     }
 
     function playRound(playerSelection, computerSelection, wins){
+        var container = document.getElementById('answer-box');
         var playerSelection = playerSelection.toLowerCase();
         if (playerSelection == 'rock' && computerSelection == 'paper' || playerSelection == 'paper' && computerSelection == 'scissors' || playerSelection == 'scissors' && computerSelection == 'rock'){
-            console.log('Computer chose: ' + computerSelection + '\nYou lose!\nWins: ' + wins);
+            container.textContent = 'Computer chose: ' + computerSelection + '.\nYou lose!\nWins: ' + wins;
         } else if (playerSelection == computerSelection){
-            console.log('Computer chose: ' + computerSelection + '\nYou drew!\nWins: ' + wins);
+            container.textContent = 'Computer chose: ' + computerSelection + '.\nYou drew!\nWins: ' + wins;
         } else {
             wins ++;
-            console.log('Computer chose: ' + computerSelection + '\nYou won!\nWins: ' + wins);
+            container.textContent = 'Computer chose: ' + computerSelection + '.\nYou won!\nWins: ' + wins;
         }
         return wins
     }
 
-    function game(){
-        var wins = 0;
-        for (var i = 0; i < 5; i++){
-            var choice = '';
-            while (choice != 'rock' && choice != 'paper' && choice != 'scissors'){
-                choice = prompt('Enter either rock, paper or scissors.')
-                choice = choice.toLowerCase()
+    const buttons = document.querySelectorAll('button');
+    var turns = 0;
+    var wins = 0;
+    // we use the .forEach method to iterate through each button
+    buttons.forEach((button) => {
+    // and for each one we add a 'click' listener
+        button.addEventListener('click', () => {
+            if (turns < 5){
+                turns ++;
+                const computerSelection = computerPlay();
+                wins = playRound(button.id, computerSelection, wins);
+            } else {
+                var container = document.getElementById('answer-box');
+                if (wins > 2){
+                    container.textContent = 'The game has finished! You won!';
+                } else {
+                    container.textContent = 'The game has finished! The computer won!';
+                }
+
+                
             }
-            var computerSelection = computerPlay()
-            wins = playRound(choice, computerSelection, wins)
-
-        }
-        if (wins > 3){
-            console.log('You won the game!')
-        } else {
-            console.log('The computer won the game!')
-        }
-    }
-
-    game()
-
+        });
+    });
 
 
 
